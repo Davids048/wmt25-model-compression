@@ -22,3 +22,6 @@ downloads/
 eggs/
 .eggs/
 .pytest_cache
+
+# Data / Experiments 
+data
