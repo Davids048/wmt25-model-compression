@@ -16,6 +16,7 @@ from transformers import AutoModelForCausalLM, get_scheduler
 import wandb
 
 from sketchtune.tailor_utils import replace_layers, save_pretrained
+from utils.log import setup_logging
 from utils.config import parse_exp_args_yaml, create_exp_output_dir
 from utils.data_utils import (
     DataCollatorForSupervisedDataset,
@@ -49,19 +50,18 @@ def main():
     )
     args = parser.parse_args()
 
-    
-    ## Set up Logging 
-    logging.basicConfig(
-        level=logging.DEBUG if args.debug else logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s"
-    )
-
-
     model_config, train_config, data_config = parse_exp_args_yaml(args.conf)
     
+    ## Misc setups
     device = torch.device('cuda')
     set_random_seed(train_config.seed)
     output_dir = create_exp_output_dir(model_config, train_config, data_config)
+    wandb.init(project='SketchTune-WMT', name=output_dir.split('/')[-1])
+    setup_logging(output_dir, args.debug)
+    LOG.info(f"Output dir: {output_dir}")
+    LOG.info(f"Configs:\n{model_config}\n{train_config}\n{data_config}")
+    LOG.debug(f"{train_config.learning_rate} {type(train_config.learning_rate)}")
+    LOG.debug(f"{type(train_config.lr_scheduler_type)}")
 
     ## Load Tokenizer
     tokenizer = load_hf_tokenizer(
@@ -111,12 +111,12 @@ def main():
             dataset,
             [len(dataset) - data_config.val_set_size, data_config.val_set_size]
         )
-        LOG.info(f"Split data set: Train set size: {len(train_dataset)}, Val set size: {len(val_dataset)}")
+        LOG.info(f"Split data set: Val set size: {len(val_dataset)}")
     else:
         train_dataset = dataset
         val_dataset = None   
     data_collator = DataCollatorForSupervisedDataset(tokenizer=tokenizer)
-    LOG.info("Finished loading data.")
+    LOG.info(f"Finished loading data. Train set size: {len(train_dataset)}")
 
 
     ## Setup Data for Training
@@ -162,7 +162,6 @@ def main():
         num_warmup_steps=train_config.num_warmup_steps,
         num_training_steps=train_config.num_train_epochs * num_update_steps_per_epoch,
     )
-    model = model.to(device)
     
     LOG.info(">>>>> Start Training >>>>>")
     def evaluation(model, eval_dataloader):
@@ -243,10 +242,10 @@ def main():
                 end = time.time() 
 
                 LOG.info(
-                    f"Batch Loss: {step_loss:.4f}\n"
-                    f"Mean loss: {mean_loss:4f}\n"
-                    f"LR: {lr:.8f}\n"
-                    f"Step: {current_step_count} / {total_training_steps}\n"
+                    f"Batch Loss: {step_loss:.4f} - "
+                    f"Mean loss: {mean_loss:4f} - "
+                    f"LR: {lr:.8f} - "
+                    f"Step: {current_step_count} / {total_training_steps} - "
                     f"Batch time: {end - start:.4f} sec\n"
                 )
 
