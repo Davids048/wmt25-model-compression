@@ -24,4 +24,4 @@ eggs/
 .pytest_cache
 
 # Data / Experiments 
-data
+sketchtune_exp/wandb/
