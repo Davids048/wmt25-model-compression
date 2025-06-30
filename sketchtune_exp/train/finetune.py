@@ -90,6 +90,7 @@ def main():
     num = sum(p.numel() for p in model.parameters() if p.requires_grad)
     LOG.info(f"Num Trainable Params: {num}")
     LOG.info("Finished loading model.")
+    model = model.to(device)
 
 
     ## Load Data 
@@ -224,7 +225,7 @@ def main():
                     or step + 1 == len(train_dataloader)):
                 lr = (
                     lr_scheduler.get_last_lr()[1]
-                    if len(lr_scheduler.get_ast_lr()) > 1
+                    if len(lr_scheduler.get_last_lr()) > 1
                     else lr_scheduler.get_last_lr()[0]
                 )
 
@@ -267,8 +268,16 @@ def main():
                 and current_step_count >= eval_delay
                 and val_dataloader is not None 
             ):
-                # TODO: Make validation fit the current task. 
-                LOG.warn("NOT PERFORMING ANY VALIDATION YET...")
+                ppl, val_loss = evaluation(model, val_dataloader)
+                LOG.info(
+                    f"Validation perplexity: {ppl}, Validation loss: {val_loss}")
+                # if val_loss < best_val_loss:
+                #     best_val_loss = val_loss
+                #     if args.global_rank == 0:
+                #         best_model = copy.deepcopy(model).to("cpu")
+                #     final_saved_model_index = current_step_count
+
+
 
         LOG.info(
             f"------------\n"
@@ -277,7 +286,12 @@ def main():
             f"------------\n"
         )
         model.save_pretrained(os.path.join(output_dir, f"epoch_{epoch}"))
-    
+
+    flag_file = os.path.join(output_dir, "._OK")
+    with open(flag_file, 'w') as f:
+        pass 
+    LOG.info("FINISHED TRAINING.")
+
 
 if __name__ == "__main__":
     main()

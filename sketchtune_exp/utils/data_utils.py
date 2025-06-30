@@ -99,7 +99,9 @@ def preprocess(
     tokenizer: transformers.PreTrainedTokenizer,
 ) -> Dict:
     examples = [s + t for s, t in zip(sources, targets)]
-    LOG.debug(f"Example data-------------->\n{examples[0]}")
+    LOG.debug(f"Example data>>>>>>>>>>>>\n"
+              f"\n{examples[0]}\n"
+              f"<<<<<<<<<<<<<<")
     examples_tokenized, sources_tokenized = [
         _tokenize_fn(strings, tokenizer) for strings in (examples, sources)
     ]
