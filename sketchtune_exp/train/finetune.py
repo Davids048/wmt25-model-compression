@@ -247,7 +247,7 @@ def main():
                     f"Mean loss: {mean_loss:4f} - "
                     f"LR: {lr:.8f} - "
                     f"Step: {current_step_count} / {total_training_steps} - "
-                    f"Batch time: {end - start:.4f} sec\n"
+                    f"Batch time: {end - start:.4f} sec"
                 )
 
                 metrics = {

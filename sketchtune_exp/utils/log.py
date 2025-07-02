@@ -32,3 +32,10 @@ def setup_logging(output_dir, debug_mode, file_name="debug.log"):
     root_logger.addHandler(console_handler)
     root_logger.addHandler(file_handler)
 
+    # Add hanlder for exception logging. 
+    def handle_exception(type, value, traceback):
+        sys.__excepthook__(type, value, traceback) 
+        root_logger.critical("Unhandled exception", exc_info=(type, value, traceback))
+
+    sys.excepthook = handle_exception
+
