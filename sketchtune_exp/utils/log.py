@@ -2,9 +2,8 @@ import logging
 import os
 import sys
 
-LOG_FILE_NAME = "debug.log"
 
-def setup_logging(output_dir, debug_mode):
+def setup_logging(output_dir, debug_mode, file_name="debug.log"):
     """Configures the root logger with console and file handlers."""
 
     # Get the root logger
@@ -25,7 +24,7 @@ def setup_logging(output_dir, debug_mode):
     console_handler.setLevel(logging.DEBUG if debug_mode else logging.INFO) # Console level can be dynamic
 
     # File Handler
-    file_handler = logging.FileHandler(os.path.join(output_dir, LOG_FILE_NAME), mode='a', encoding='utf-8')
+    file_handler = logging.FileHandler(os.path.join(output_dir, file_name), mode='a', encoding='utf-8')
     file_handler.setFormatter(formatter)
     file_handler.setLevel(logging.DEBUG) # File typically logs everything
 

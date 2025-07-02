@@ -25,3 +25,4 @@ eggs/
 
 # Data / Experiments 
 sketchtune_exp/wandb/
+sketchtune_exp/sketchtune
