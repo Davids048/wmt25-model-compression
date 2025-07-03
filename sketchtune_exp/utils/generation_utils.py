@@ -78,7 +78,7 @@ def generate_completions(model, device, tokenizer, prompts, batch_size=1, stop_i
             # duplicate the prompts to match the number of return sequences
             batch_prompts = [prompt for prompt in batch_prompts for _ in range(num_return_sequences)]
             batch_generations = [
-                output[len(prompt):] for prompt, output in zip(batch_prompts, batch_outputs)
+                output[len(prompt):].rstrip() for prompt, output in zip(batch_prompts, batch_outputs)
             ]
         except Exception as e:
             LOG.error("Error when generating completions for batch:")
