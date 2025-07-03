@@ -1,0 +1,28 @@
+# DEBUG
+
+# Model Configuration
+model_path: "CohereLabs/aya-expanse-8b"
+model_quantizer_path: "quantizers/aya-expanse-8b_b4_e3_g1.pkl"
+
+
+# Training Configuration
+per_device_train_batch_size: 2
+gradient_accumulation_steps: 4
+
+per_device_eval_batch_size: 8
+
+num_train_epochs: 1
+num_warmup_steps: 100
+
+learning_rate: 1e-4
+weight_decay: 0.01
+lr_scheduler_type: "cosine"
+eval_step: 500 
+
+
+# Data Configuration
+data_path: "data/wmt25-data/wmt25-ces-deu/train-parts/Statmt-news_commentary-18.1-ces-deu.json"
+source_lang: "ces"
+target_lang: "deu"
+val_set_size: 0
+

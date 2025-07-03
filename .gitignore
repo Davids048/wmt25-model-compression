@@ -22,3 +22,7 @@ downloads/
 eggs/
 .eggs/
 .pytest_cache
+
+# Data / Experiments 
+sketchtune_exp/wandb/
+sketchtune_exp/sketchtune

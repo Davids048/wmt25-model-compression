@@ -1,0 +1,16 @@
+# Model Configuration
+model_path: "CohereLabs/aya-expanse-8b"
+model_quantizer_path: "quantizers/aya-expanse-8b_b4_e3_g1.pkl"
+
+
+# Eval Configuration 
+finetuned_quantizer_path: "exp_runs/ces-deu/aya-expanse-8b_b4_e3_g1/BS8-LR0.0001/20250629214318/epoch_0"
+per_device_eval_batch_size: 16
+ 
+
+
+# Data Configuration
+data_path: "data/wmt25-data/wmt25-ces-deu/train-parts/OPUS-wikimedia-v20230407-ces-deu.ces"
+source_lang: "ces"
+target_lang: "deu"
+val_set_size: 0

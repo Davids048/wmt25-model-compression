@@ -26,7 +26,7 @@ dependencies = {file = "requirements.txt"}
 
 [tool.setuptools.packages.find]
 #where = ["src"]  # ["."] by default
-include = ["modelzip*"]  # ["*"] by default
+include = ["modelzip*", "sketchtune_exp*"]  # ["*"] by default
 exclude = ["tests*", "tmp*", "build*", "dist*"]    # empty by default
 #####################
 

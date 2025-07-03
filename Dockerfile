@@ -30,6 +30,7 @@ RUN python3 -m modelzip.setup -h
 #COPY workdir/models/aya-expanse-8b-bnb-8bit /model/bnb-8bit
 #COPY workdir/models/aya-expanse-8b-bnb-4bit /model/bnb-4bit
 
-# 
+COPY workdir/models/aya-expanse-8b-base /model/base
+
 #RUN bash /model/bnb-8bit/run.sh ces-deu 1 <<< "This is a test with the 8-bit model."
 #RUN bash /model/bnb-4bit/run.sh ces-deu 1 <<< "This is a test with the 4-bit model."
