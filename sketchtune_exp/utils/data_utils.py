@@ -22,21 +22,26 @@ TRANSLATE_PROMPT = """<s>Below is a sentence in {source_lang}. Translate it to {
 ### Translation:
 """
 
-def create_test_dataset(file_path, source_lang, target_lang):
-    """Create dataset from text file for evaluation."""
-    with open(file_path, 'rb') as f: 
-        prompts = [
-                TRANSLATE_PROMPT.format_map(
-                {
-                    "source_lang": get_lang_name(source_lang),
-                    "target_lang": get_lang_name(target_lang),
-                    "source_sentence": line
-                }
-            )
-            for line in f
-        ]
-    assert prompts is not None, "Failed to create test dataset."
 
+def create_test_dataset(file_path, source_lang, target_lang, limit=None):
+    """Create dataset from text file for evaluation."""
+    prompts = []
+    with open(file_path, 'rb') as f: 
+        for i, line in enumerate(f):
+            if limit and i >= limit:
+                break
+
+            prompts.append(
+                TRANSLATE_PROMPT.format(
+                    source_lang=get_lang_name(source_lang),
+                    target_lang=get_lang_name(target_lang),
+                    source_sentence=line.strip()
+                )
+            )
+
+    if not prompts:
+        raise ValueError(f"No data found in {file_path}")
+    
     return prompts
             
 
