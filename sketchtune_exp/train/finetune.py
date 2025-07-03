@@ -1,4 +1,5 @@
 import time
+import shutil
 import argparse
 import logging
 import math
@@ -33,6 +34,17 @@ from utils.utils import get_all_reduce_mean, set_random_seed, to_device
 
 
 LOG = logging.getLogger(__name__)
+
+def post_save(save_path):
+    """Copy run script and quantizer to the saved directory. """
+    exp_dir = os.getenv("EXP_DIR")
+    LOG.debug(f"exp_dir: {exp_dir}")
+
+    run_script_path = os.path.join(exp_dir, "eval", "run.sh")
+    shutil.copy(
+        run_script_path,
+        save_path,
+    )
 
 
 
@@ -286,6 +298,7 @@ def main():
             f"------------\n"
         )
         model.save_pretrained(os.path.join(output_dir, f"epoch_{epoch}"))
+        post_save(os.path.join(output_dir, f"epoch_{epoch}"))
 
     flag_file = os.path.join(output_dir, "._OK")
     with open(flag_file, 'w') as f:
